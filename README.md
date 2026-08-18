@@ -1,3 +1,84 @@
+*Prompts*
+Phase 1: Project Setup & Initialization
+
+Initialized a new React application using Vite, React, and TypeScript. Used functional components only, and didn't install any UI libraries. Removed all default Vite boilerplate code to leave a clean, minimal application.
+
+Phase 2: Architectural Setup (MVVM Pattern)
+
+Created an empty MVVM (Model-View-ViewModel) directory structure for the Home screen: HomeModel, HomeView, and useHomeViewModel. Ensured business logic resides in the model, React state/actions in the view-model, and UI rendering in the view.
+
+Phase 3: Service & API Integration
+
+Created an OMDB service in src/services/omdbService.ts to search movies using fetch and read the API key from Vite environment variables. Implemented strong TypeScript types for movie objects and API responses.
+
+Phase 4: Firebase Configuration & Authentication
+
+Initialized Firebase SDK with Auth and Firestore using environment variables. Implemented sign-in with Google/Email, auth state persistence, and user-scoped data writing.
+
+
+
+*AI-Assisted Development Overview*
+Throughout the development of this React movie application, I utilized AI as a collaborative development assistant to accelerate coding, structure architectural patterns, and troubleshoot runtime issues. Rather than relying on AI blindly, I acted as the lead architect—directing the prompts, reviewing generated code, and refining implementations to ensure high code quality, security, and maintainability.
+
+Below is an overview of how AI assisted me across the core phases of this project.
+
+1. Project Initialization 
+At the start of the project, I used AI to quickly scaffold the application workspace:
+
+Scaffolding: Prompted the AI to initialize a clean React project using Vite and TypeScript without installing unnecessary UI component libraries.
+
+Cleanup: Instructed the AI to strip out default Vite boilerplate code, images, and counting examples, leaving a clean, minimal workspace ready for custom feature development.
+
+2. Establishing an MVVM Architecture
+To maintain a clean separation of concerns, I guided the AI to implement an MVVM (Model-View-ViewModel) architectural pattern:
+
+Models: Encapsulated business logic and data fetching wrappers (such as OMDB API requests and Firestore interactions).
+
+ViewModels: Managed component state, custom hooks (useHomeViewModel, useFavoritesViewModel), and asynchronous execution flows.
+
+Views: Handled purely presentational components and user interface rendering.
+
+This separation made the codebase modular, testable, and much easier to scale.
+
+3. API Integration & TypeScript Typing
+OMDB Service: AI helped write asynchronous service functions using the native fetch API to query movie data securely via Vite environment variables.
+
+Type Safety: The AI generated strict TypeScript interfaces for movie objects (id, Title, Poster, Year, vote_average), eliminating loose any types and preventing runtime property errors during compilation.
+
+4. Firebase Authentication & Firestore Integration
+Integrating a backend typically introduces a lot of boilerplate. AI assisted significantly in this phase:
+
+Authentication: Setting up Firebase Auth configuration, sign-in state listeners (onAuthStateChanged), and route protection logic.
+
+User-Scoped Database Queries: Structuring Firestore document paths under /users/{userId}/watchlist/{movieId} to ensure data isolation per user.
+
+5. Debugging & Troubleshooting Support
+One of the most valuable aspects of using AI as a collaborator was rapid debugging:
+TypeScript & Casing Errors: When Windows file system case-insensitivity conflicted with strict TypeScript case checking (tsc), AI helped identify mismatched file imports (e.g., watchListService vs. watchlistService).
+
+Firebase Permissions: When encountering Firestore Missing or insufficient permissions errors, AI assisted in identifying security rule configuration mistakes and validating authenticated user IDs before executing database writes.
+
+*Examples of Manual Improvements, Corrections, or Refactoring*
+1] Security Rules & Auth Context Fix
+AI Output: The generated code initially tried writing user watchlists to a global path or failed due to missing userId parameters.
+
+Manual Fix: Refactored watchlistService.ts to explicitly check that userId is defined prior to calling setDoc(), and updated Firestore Rules in the console to enforce user-level isolation:
+
+JavaScript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/watchlist/{movieId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+2] Bug Fixing & UI Callbacks
+AI Output: The AI created movie card components but forgot to attach the onClick event handler to the "Add to Watchlist" button.
+
+Manual Fix: Wired up the prop callback handler (onAddToWatchlist(movie)) from the parent View to ensure user actions triggered state updates correctly.
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -73,63 +154,3 @@ export default defineConfig([
 ])
 
 ```
-AI-Assisted Development Overview
-Throughout the development of this React movie application, I utilized AI as a collaborative development assistant to accelerate coding, structure architectural patterns, and troubleshoot runtime issues. Rather than relying on AI blindly, I acted as the lead architect—directing the prompts, reviewing generated code, and refining implementations to ensure high code quality, security, and maintainability.
-
-Below is an overview of how AI assisted me across the core phases of this project.
-
-1. Project Initialization 
-At the start of the project, I used AI to quickly scaffold the application workspace:
-
-Scaffolding: Prompted the AI to initialize a clean React project using Vite and TypeScript without installing unnecessary UI component libraries.
-
-Cleanup: Instructed the AI to strip out default Vite boilerplate code, images, and counting examples, leaving a clean, minimal workspace ready for custom feature development.
-
-2. Establishing an MVVM Architecture
-To maintain a clean separation of concerns, I guided the AI to implement an MVVM (Model-View-ViewModel) architectural pattern:
-
-Models: Encapsulated business logic and data fetching wrappers (such as OMDB API requests and Firestore interactions).
-
-ViewModels: Managed component state, custom hooks (useHomeViewModel, useFavoritesViewModel), and asynchronous execution flows.
-
-Views: Handled purely presentational components and user interface rendering.
-
-This separation made the codebase modular, testable, and much easier to scale.
-
-3. API Integration & TypeScript Typing
-OMDB Service: AI helped write asynchronous service functions using the native fetch API to query movie data securely via Vite environment variables.
-
-Type Safety: The AI generated strict TypeScript interfaces for movie objects (id, Title, Poster, Year, vote_average), eliminating loose any types and preventing runtime property errors during compilation.
-
-4. Firebase Authentication & Firestore Integration
-Integrating a backend typically introduces a lot of boilerplate. AI assisted significantly in this phase:
-
-Authentication: Setting up Firebase Auth configuration, sign-in state listeners (onAuthStateChanged), and route protection logic.
-
-User-Scoped Database Queries: Structuring Firestore document paths under /users/{userId}/watchlist/{movieId} to ensure data isolation per user.
-
-5. Debugging & Troubleshooting Support
-One of the most valuable aspects of using AI as a collaborator was rapid debugging:
-TypeScript & Casing Errors: When Windows file system case-insensitivity conflicted with strict TypeScript case checking (tsc), AI helped identify mismatched file imports (e.g., watchListService vs. watchlistService).
-
-Firebase Permissions: When encountering Firestore Missing or insufficient permissions errors, AI assisted in identifying security rule configuration mistakes and validating authenticated user IDs before executing database writes.
-
-*Examples of Manual Improvements, Corrections, or Refactoring*
-1] Security Rules & Auth Context Fix
-AI Output: The generated code initially tried writing user watchlists to a global path or failed due to missing userId parameters.
-
-Manual Fix: Refactored watchlistService.ts to explicitly check that userId is defined prior to calling setDoc(), and updated Firestore Rules in the console to enforce user-level isolation:
-
-JavaScript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId}/watchlist/{movieId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-  }
-}
-2] Bug Fixing & UI Callbacks
-AI Output: The AI created movie card components but forgot to attach the onClick event handler to the "Add to Watchlist" button.
-
-Manual Fix: Wired up the prop callback handler (onAddToWatchlist(movie)) from the parent View to ensure user actions triggered state updates correctly.
