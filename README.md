@@ -110,7 +110,26 @@ User-Scoped Database Queries: Structuring Firestore document paths under /users/
 
 5. Debugging & Troubleshooting Support
 One of the most valuable aspects of using AI as a collaborator was rapid debugging:
-
 TypeScript & Casing Errors: When Windows file system case-insensitivity conflicted with strict TypeScript case checking (tsc), AI helped identify mismatched file imports (e.g., watchListService vs. watchlistService).
 
 Firebase Permissions: When encountering Firestore Missing or insufficient permissions errors, AI assisted in identifying security rule configuration mistakes and validating authenticated user IDs before executing database writes.
+
+*Examples of Manual Improvements, Corrections, or Refactoring*
+1] Security Rules & Auth Context Fix
+AI Output: The generated code initially tried writing user watchlists to a global path or failed due to missing userId parameters.
+
+Manual Fix: Refactored watchlistService.ts to explicitly check that userId is defined prior to calling setDoc(), and updated Firestore Rules in the console to enforce user-level isolation:
+
+JavaScript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/watchlist/{movieId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+2] Bug Fixing & UI Callbacks
+AI Output: The AI created movie card components but forgot to attach the onClick event handler to the "Add to Watchlist" button.
+
+Manual Fix: Wired up the prop callback handler (onAddToWatchlist(movie)) from the parent View to ensure user actions triggered state updates correctly.
