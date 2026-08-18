@@ -73,3 +73,44 @@ export default defineConfig([
 ])
 
 ```
+AI-Assisted Development Overview
+Throughout the development of this React movie application, I utilized AI as a collaborative development assistant to accelerate coding, structure architectural patterns, and troubleshoot runtime issues. Rather than relying on AI blindly, I acted as the lead architect—directing the prompts, reviewing generated code, and refining implementations to ensure high code quality, security, and maintainability.
+
+Below is an overview of how AI assisted me across the core phases of this project.
+
+1. Project Initialization 
+At the start of the project, I used AI to quickly scaffold the application workspace:
+
+Scaffolding: Prompted the AI to initialize a clean React project using Vite and TypeScript without installing unnecessary UI component libraries.
+
+Cleanup: Instructed the AI to strip out default Vite boilerplate code, images, and counting examples, leaving a clean, minimal workspace ready for custom feature development.
+
+2. Establishing an MVVM Architecture
+To maintain a clean separation of concerns, I guided the AI to implement an MVVM (Model-View-ViewModel) architectural pattern:
+
+Models: Encapsulated business logic and data fetching wrappers (such as OMDB API requests and Firestore interactions).
+
+ViewModels: Managed component state, custom hooks (useHomeViewModel, useFavoritesViewModel), and asynchronous execution flows.
+
+Views: Handled purely presentational components and user interface rendering.
+
+This separation made the codebase modular, testable, and much easier to scale.
+
+3. API Integration & TypeScript Typing
+OMDB Service: AI helped write asynchronous service functions using the native fetch API to query movie data securely via Vite environment variables.
+
+Type Safety: The AI generated strict TypeScript interfaces for movie objects (id, Title, Poster, Year, vote_average), eliminating loose any types and preventing runtime property errors during compilation.
+
+4. Firebase Authentication & Firestore Integration
+Integrating a backend typically introduces a lot of boilerplate. AI assisted significantly in this phase:
+
+Authentication: Setting up Firebase Auth configuration, sign-in state listeners (onAuthStateChanged), and route protection logic.
+
+User-Scoped Database Queries: Structuring Firestore document paths under /users/{userId}/watchlist/{movieId} to ensure data isolation per user.
+
+5. Debugging & Troubleshooting Support
+One of the most valuable aspects of using AI as a collaborator was rapid debugging:
+
+TypeScript & Casing Errors: When Windows file system case-insensitivity conflicted with strict TypeScript case checking (tsc), AI helped identify mismatched file imports (e.g., watchListService vs. watchlistService).
+
+Firebase Permissions: When encountering Firestore Missing or insufficient permissions errors, AI assisted in identifying security rule configuration mistakes and validating authenticated user IDs before executing database writes.
